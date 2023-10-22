@@ -46,7 +46,7 @@ permalink: /cv/
 * DPG (Deutsche Physikalische Gesellschaft - German Physical Society)
 
 ## Attendance at conferences and seminars
-* Lectures:
+* Presentations:
   * "Simulation toolbox for multidimensional gas chromatography" presented at **20th GCxGC Symposium**, 05/2023, Canmore, Canada
   * "Modular simulation of complex gas chromatographic systems" presented at **14th Multidimensional Chromatography Workshop**, 01/2023, Liege, Belgium 
   * "Spatial thermal gradient separation of PAHs - Simulation and measurements" presented at **43rd International Symposium on Capillary Chromatography**, 05/2019, Fort Worth, USA 
