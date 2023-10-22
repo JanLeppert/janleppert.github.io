@@ -7,9 +7,10 @@ permalink: /about/
 # Personal details
 Jan Leppert
 
-Mirecourtstaße 19
+Mirecourtstraße 19
 
 53225 Bonn
+Germany
 
 {{ site.email }}
 
