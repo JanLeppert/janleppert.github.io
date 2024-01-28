@@ -4,6 +4,8 @@ title: Publications
 permalink: /publications/
 ---
 
+* Brehmer, T., Duong, B., Boeker, P., Wüst, M., **Leppert, J.** (2024): „Simulation of gas chromatographic separations and estimation of distribution-centric retention parameters using linear solvation energy relationships“, Journal of Chromatography A, 1717: 464665. [10.1016/j.chroma.2024.464665](https://doi.org/10.1016/j.chroma.2024.464665).
+
 * Brehmer, T., Boeker, P., Wüst, M., **Leppert, J.** (2023): 
   „Relation between characteristic temperature and elution temperature in temperature programmed gas chromatography - part I: Influence of initial temperature and heating rate“, _Journal of Chromatography A_, 1707: 464301. [10.1016/j.chroma.2023.464301](https://doi.org/10.1016/j.chroma.2023.464301).
 
