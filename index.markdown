@@ -7,7 +7,7 @@ layout: home
 
 Hi, I am Jan Leppert, welcome to my personal webpage. 
 
-I am a physicist working in analytical chemistry and work as a temporal primary investigator at the [University of Bonn](https://www.lwf.uni-bonn.de/institute/iel/institut/lmc/Fast-GC). In my **current work** I use [simulations of complex gas chromatographic (GC) separation system](https://github.com/JanLeppert/GasChromatographySystems.jl), e.g. GC×GC, for method development and optimization. Part of this work is the description of the interaction of compounds with different stationary phases used in GC with different models, like thermodynamic models and linear solvent energy relationship (LSER) models.
+I am a physicist working in analytical chemistry and work as a temporal primary investigator at the [University of Bonn](https://www.lwf.uni-bonn.de/institute/iel/institut/lmc/Fast-GC). In my **current work** I use [simulations of complex gas chromatographic (GC) separation system](https://github.com/JanLeppert/GasChromatographyToolbox), e.g. GC×GC, for method development and optimization. Part of this work is the description of the interaction of compounds with different stationary phases used in GC with different models, like thermodynamic models and linear solvent energy relationship (LSER) models.
 
 In the future, I want to use these simulations of complex GC-systems to _automatically_ optimize separations, using methods of artificial intelligence and machine learning, to improve method development, especially for multidimensional GC separation.  
 
