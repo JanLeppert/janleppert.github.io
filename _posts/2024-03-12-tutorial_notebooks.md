@@ -6,11 +6,11 @@ categories: Tutorial GasChromatographyToolbox Notebooks
 ---
 ![GasChromatographyToolbox.jl](/assets/GasChromatographyToolbox_logo_w.png)
 
-In this post I want to give a tutorial on how to run Pluto notebooks to run simulations of gas chromatographic simulations. But first I want to introduce a new Github repository named [GasChromatographyToolbox](https://github.com/JanLeppert/GasChromatographyToolbox) which will function as the central entry point for the simulation of gas chromatographic separations. In this repository a selection of interactive notebooks is collected. For now only a limited number of notebooks are available; further notebooks will be added in the future:
+In this post I want to give a tutorial on how to run Pluto notebooks to run simulations of gas chromatographic simulations. But first I want to introduce a new Github repository named [GasChromatographyToolbox](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox) which will function as the central entry point for the simulation of gas chromatographic separations. In this repository a selection of interactive notebooks is collected. For now only a limited number of notebooks are available; further notebooks will be added in the future:
 
-* [`simulation_conventional_GC.jl`](https://github.com/JanLeppert/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl) ... Simulation of GC separation in one capillary column using [GasChromatographySimulator.jl](https://github.com/JanLeppert/GasChromatographySimulator.jl). Retention data from [RetentionData](https://github.com/JanLeppert/RetentionData) is used.
-* [`simulation_thermal_gradient_GC.jl`](https://github.com/JanLeppert/GasChromatographyToolbox/blob/main/notebooks/simulation_thermal_gradient_GC.jl) ... Simulation of GC separation in one capillary column with a thermal gradient along the column using [GasChromatographySimulator.jl](https://github.com/JanLeppert/GasChromatographySimulator.jl). Retention data from [RetentionData](https://github.com/JanLeppert/RetentionData) is used.
-* [`estimate_retention_parameters.jl`](https://github.com/JanLeppert/GasChromatographyToolbox/blob/main/notebooks/estimate_retention_parameters.jl) ... Estimation of retention parameters from measured chromatograms.
+* [`simulation_conventional_GC.jl`](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl) ... Simulation of GC separation in one capillary column using [GasChromatographySimulator.jl](https://github.com/GasChromatographyToolbox/GasChromatographySimulator.jl). Retention data from [RetentionData](https://github.com/GasChromatographyToolbox/RetentionData) is used.
+* [`simulation_thermal_gradient_GC.jl`](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/simulation_thermal_gradient_GC.jl) ... Simulation of GC separation in one capillary column with a thermal gradient along the column using [GasChromatographySimulator.jl](https://github.com/GasChromatographyToolbox/GasChromatographySimulator.jl). Retention data from [RetentionData](https://github.com/GasChromatographyToolbox/RetentionData) is used.
+* [`estimate_retention_parameters.jl`](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/estimate_retention_parameters.jl) ... Estimation of retention parameters from measured chromatograms.
 
 ## Installing Julia
 
@@ -75,7 +75,7 @@ This will load in the Pluto package and start a Pluto notebook session. Your bro
 
 ![Start screen](/assets/p2/start.png)
 
-In the cell titled "Open a Notebook" you can enter the path (if you have downloaded it) or the URL to the notebook you want to open. For example this [URL](https://github.com/JanLeppert/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl), if pasted into this cell, opens the notebook for the simulation of a conventional GC in the 'Safe preview' mode. Later, all ready used notebooks will be available through the "My work" list. 
+In the cell titled "Open a Notebook" you can enter the path (if you have downloaded it) or the URL to the notebook you want to open. For example this [URL](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl), if pasted into this cell, opens the notebook for the simulation of a conventional GC in the 'Safe preview' mode. Later, all ready used notebooks will be available through the "My work" list. 
 
 ![Safe preview](/assets/p2/safe_preview.png)
 
