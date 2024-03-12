@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Tutorial for usage of Pluto notebooks"
-date:   2024-03-07
+date:   2024-03-12
 categories: Tutorial GasChromatographyToolbox Notebooks
 ---
 ![GasChromatographyToolbox.jl](/assets/GasChromatographyToolbox_logo_w.png)
@@ -92,5 +92,11 @@ With the button (rectangle with arrow) on the top right it is also possible to e
 The Julia code, which is executed in the different cells can be viewed by clicking on crossed out eye symbol on the left to the cell:
 
 ![Hidden code](/assets/p2/hidden_code.gif)
+
+The cells can be moved by using the shortcut `Alt` + `Up/Down` (or `Option` + `Up/Down` on Mac) or by drag and drop. This can be helpful to observe the changes made in one cell on the results shown in another cell.
+
+![Drag and drop](/assets/p2/drag.gif)
+
+Additional information about Pluto notebooks can found [here](https://plutojl.org/).
 
 In the next tutorial the notebook `simulation_conventional_GC.jl` will be shown and explained step by step.
