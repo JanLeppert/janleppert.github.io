@@ -3,6 +3,10 @@ layout: post
 title:  "Tutorial for usage of Pluto notebooks"
 date:   2024-03-12
 categories: Tutorial GasChromatographyToolbox Notebooks
+image:
+  path: /assest/Toolbox_logo_w_asym
+  height: 100
+  width: 100
 ---
 ![GasChromatographyToolbox.jl](/assets/GasChromatographyToolbox_logo_w.png)
 
