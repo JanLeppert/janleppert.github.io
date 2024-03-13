@@ -3,6 +3,10 @@ layout: post
 title:  "Tutorial: Simulation of conventional GC"
 date:   2024-03-13
 categories: Tutorial GasChromatographyToolbox Notebooks
+image:
+  path: /assest/GasChromatographySimulator_logo.png
+  height: 966
+  width: 124
 ---
 In this post I want to give a tutorial on how to use the notebook `simulation_conventional_GC.jl` to run simulations for a simple GC system. Installing the needed software and how to start a notebook was shown in the [previous tutorial]({% post_url 2024-03-12-tutorial_notebooks %}). The notebook can be found under this [URL](https://github.com/JanLeppert/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl).
 
