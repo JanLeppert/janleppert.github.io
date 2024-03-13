@@ -1,14 +1,12 @@
 ---
 layout: post
 title:  "Tutorial: Simulation of conventional GC"
-date:   2024-03-08
+date:   2024-03-13
 categories: Tutorial GasChromatographyToolbox Notebooks
 ---
 In this post I want to give a tutorial on how to use the notebook `simulation_conventional_GC.jl` to run simulations for a simple GC system. Installing the needed software and how to start a notebook was shown in the [previous tutorial]({% post_url 2024-03-12-tutorial_notebooks %}). The notebook can be found under this [URL](https://github.com/JanLeppert/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl).
 
 The presented notebook can be used to simulate separation of mixes of substances on a simple GC using one column with a selected stationary phase and a temperature program for the whole column. No separately heated zones of the column exist. Most one-dimensional GC systems can be approximated with this simulation. In most cases separately heated zones, like in the injector and transfer line to the detector, can be neglected in comparison to the much longer section of the column in the GC oven.  
-
-PIC GC + chromatogram?
 
 In the following I will go through the notebook section by section and explain, what settings can be made, what the results are and how to export the results. 
 
@@ -140,3 +138,23 @@ With `Filename` the name of the exported file can be changed. By clicking the `D
 As shown in the [previous tutorial]({% post_url 2024-03-12-tutorial_notebooks %}) you can move the cells to other positions in the notebook. This comes in handy, if you want to change some parameters and observe the change in the chromatogram directly as shown here for the variation of the column diameter:
 
 ![Diameter variation](/assets/p3/dvar.gif)
+
+This concludes this tutorial. In the next tutorial I will show, how the notebook [`estimate_retention_parameters.jl`](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/estimate_retention_parameters.jl) can be used to calculate retention parameters from a small number of GC measurements with different programs.
+
+ Please leave a comment if you have more questions about the simulator.
+
+<script src="https://giscus.app/client.js"
+        data-repo="JanLeppert/janleppert.github.io"
+        data-repo-id="R_kgDOKa8EYQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOKa8EYc4Cd8Fa"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
