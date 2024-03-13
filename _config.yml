@@ -81,13 +81,13 @@ minima:
 
 # Github discussions as comment section using Giscus
 comments:
-  active: "giscus"
-    enabled: true
-    repo: "JanLeppert/janleppert.github.io"
-    repo_id: "R_kgDOKa8EYQ"
-    category: "Announcements"
-    category_id: "DIC_kwDOKa8EYc4Cd8Fa"
-    mapping: "pathname"
-    input_position: "bottom"
-    lang: "en" # optional, default to the value of `site.lang`
-    reactions_enabled: "1"
+active: "giscus"
+enabled: true
+repo: "JanLeppert/janleppert.github.io"
+repo_id: "R_kgDOKa8EYQ"
+category: "Announcements"
+category_id: "DIC_kwDOKa8EYc4Cd8Fa"
+mapping: "pathname"
+input_position: "bottom"
+lang: "en" # optional, default to the value of `site.lang`
+reactions_enabled: "1"
