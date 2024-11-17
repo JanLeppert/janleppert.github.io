@@ -1,1 +1,293 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-10-09T19:04:29+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jan Leppert</title><subtitle>All about me and my research.</subtitle><author><name>Jan Leppert</name><email>contact@janleppert.com</email></author></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-11-17T13:32:11+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jan Leppert</title><subtitle>All about me and my research.</subtitle><author><name>Jan Leppert</name><email>info@janleppert.de</email></author><entry><title type="html">Tutorial: Simulation of conventional GC</title><link href="http://localhost:4000/tutorial/gaschromatographytoolbox/notebooks/2024/03/13/tutorial_notebook_conventional_GC.html" rel="alternate" type="text/html" title="Tutorial: Simulation of conventional GC" /><published>2024-03-13T00:00:00+01:00</published><updated>2024-03-13T00:00:00+01:00</updated><id>http://localhost:4000/tutorial/gaschromatographytoolbox/notebooks/2024/03/13/tutorial_notebook_conventional_GC</id><content type="html" xml:base="http://localhost:4000/tutorial/gaschromatographytoolbox/notebooks/2024/03/13/tutorial_notebook_conventional_GC.html"><![CDATA[<p>In this post I want to give a tutorial on how to use the notebook <code class="language-plaintext highlighter-rouge">simulation_conventional_GC.jl</code> to run simulations for a simple GC system. Installing the needed software and how to start a notebook was shown in the <a href="/tutorial/gaschromatographytoolbox/notebooks/2024/03/12/tutorial_notebooks.html">previous tutorial</a>. The notebook can be found under this <a href="https://github.com/JanLeppert/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl">URL</a>.</p>
+
+<p>The presented notebook can be used to simulate separation of mixes of substances on a simple GC using one column with a selected stationary phase and a temperature program for the whole column. No separately heated zones of the column exist. Most one-dimensional GC systems can be approximated with this simulation. In most cases separately heated zones, like in the injector and transfer line to the detector, can be neglected in comparison to the much longer section of the column in the GC oven.</p>
+
+<p>In the following I will go through the notebook section by section and explain, what settings can be made, what the results are and how to export the results.</p>
+
+<h2 id="header">Header</h2>
+<p>In the header the needed packages are load. This can take some time, especially loading for the first time after installing Julia. The name of the notebook is indicated here. The unhidden code looks like this if the packages are successfully loaded:
+<img src="/assets/p3/header.png" alt="Header" />
+The loaded versions of the packages can be checked by clicking on the check marks next to the package name. In this example the latest version <code class="language-plaintext highlighter-rouge">0.4.6</code> of <a href="https://github.com/GasChromatographyToolbox/GasChromatographySimulator.jl"><code class="language-plaintext highlighter-rouge">GasChromatographySimulator.jl</code></a> was loaded. By clicking on the circle with the upwards arrow a newer version, if available, can be loaded.</p>
+
+<h2 id="settings">Settings</h2>
+<p>After the header and the title with a short description of the notebook the settings for the simulation follow.</p>
+<h3 id="solute-database">Solute database</h3>
+<p>Here the database with retention parameters is loaded. As default the database from <a href="https://github.com/JanLeppert/RetentionData">RetentionData</a> is loaded. The retention parameters are expressed with the three parameter <a href="10.1016/j.chroma.2017.02.047">Distribution-centric model</a> by Leonid M. Blumberg.</p>
+
+<p><img src="/assets/p3/solute_default_db.png" alt="Solute default database" /></p>
+
+<p>You can load another database by activating the option “Load own database”. In this case a file picker appears, which you can click and than select the file. After activating this option, the following cell reports an error, because no database was selected yet.</p>
+
+<p><img src="/assets/p3/solute_own_db.png" alt="Solute own database" /></p>
+
+<p>The database should be a .csv-file with the following structure:</p>
+
+<p><img src="/assets/p3/db_structure.png" alt="database structure" /></p>
+
+<p>The database has 11 columns containing different information and every row contains the information for one substance. The saved information are:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Name</code> - Name of the substance. If a name contains a comma, the name has to be placed in quotation marks.</li>
+  <li><code class="language-plaintext highlighter-rouge">CAS</code> - CAS number of the substance, this information is used for the estimation of the diffusion coefficient based on the formula and molar mass extracted from a database (<a href="https://github.com/longemen3000/ChemicalIdentifiers.jl"><code class="language-plaintext highlighter-rouge">ChemicalIdentifiers.jl</code></a>). If the substance is not found, in this database the diffusion coefficient of n-pentadecane is used as placeholder.</li>
+  <li><code class="language-plaintext highlighter-rouge">Phase</code> - Label of the stationary phase for which the retention parameters where estimated. The labels of the database are used for the selection of the stationary phase in the column settings.</li>
+  <li><code class="language-plaintext highlighter-rouge">Tchar</code> - The first retention parameter, the characteristic temperature <em>T</em><sub>char</sub>. This is the temperature, where <em>k</em> = 1 (or ln <em>k</em> = 0).</li>
+  <li><code class="language-plaintext highlighter-rouge">thetachar</code> - The second retention parameter, the characteristic thermal constant θ<sub>char</sub>. It is the is the inverse decreasing slope of ln <em>k</em>(<em>T</em>) at <em>T</em> = <em>T</em><sub>char</sub>.</li>
+  <li><code class="language-plaintext highlighter-rouge">DeltaCp</code> - The third retention parameter, the change of isobaric heat capacity Δ<em>C</em><sub>p</sub>. It describes the curvature of ln <em>k</em>(<em>T</em>) for <em>T</em> ≶ <em>T</em><sub>char</sub>.</li>
+  <li><code class="language-plaintext highlighter-rouge">phi0</code> - The dimensionless film thickness (<em>d</em><sub>f</sub>/<em>d</em>) of the stationary phase where the retention parameters where estimated. This information is needed to compensate the retention factor for different film thicknesses.</li>
+  <li><code class="language-plaintext highlighter-rouge">Source</code> - Here information about the source of the retention parameters can be stored or other annotations can be made here.</li>
+  <li><code class="language-plaintext highlighter-rouge">Cat_1</code>, <code class="language-plaintext highlighter-rouge">Cat_2</code>, <code class="language-plaintext highlighter-rouge">Cat_3</code> - Categorical descriptors for the substances. This information is later used for the substance selection.</li>
+</ul>
+
+<p>With a successfully loaded own database the output looks like:
+<img src="/assets/p3/solute_own_db_2.png" alt="Loaded own database" /></p>
+
+<p>It is also possible to use only two parameters of the Distribution-centric model by setting the third parameter Δ<em>C</em><sub>p</sub> = 0.</p>
+
+<h3 id="option-settings">Option settings</h3>
+<p>In this notebook only two option settings can be changed.</p>
+
+<p><img src="/assets/p3/option_settings_.gif" alt="Option settings" /></p>
+
+<p>These options are:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">viscosity model</code> - Selects the model for the viscosity of the mobile phase as a function of the temperature. Options are <code class="language-plaintext highlighter-rouge">Blumberg</code>, a non-linear model from <a href="https://doi.org/10.1002/9783527632145">Blumbergs book</a>, and <code class="language-plaintext highlighter-rouge">HP</code>, a linear model as used in the <a href="https://www.agilent.com/en/support/gas-chromatography/gccalculators">HP/Agilent flow calculator</a>.</li>
+  <li><code class="language-plaintext highlighter-rouge">control mode</code> - Selects the control mode for the flow. Options are <code class="language-plaintext highlighter-rouge">Flow</code>, where the flow through the column is defined and the needed inlet pressure is calculated, and <code class="language-plaintext highlighter-rouge">Pressure</code>, where the inlet pressure is selected and the resulting flow through the column is calculated.</li>
+</ul>
+
+<p>To apply the changes of the settings the button <code class="language-plaintext highlighter-rouge">Confirm</code> (respectively <code class="language-plaintext highlighter-rouge">Senden</code> in the screenshots, depending on the language settings of your operating system) must be clicked. Otherwise the change is not registered.</p>
+
+<h3 id="column-settings">Column settings</h3>
+<p>Next are the settings regarding the column, including the selection of the type of the mobile phase.</p>
+
+<p><img src="/assets/p3/column_settings.png" alt="Column settings" /></p>
+
+<p>The following settings can be changed:</p>
+<ul>
+  <li><code><i>L</i> [m]</code> - The length of the column in meters.</li>
+  <li><code><i>d</i> [mm]</code> - The internal diameter of the column im millimeters.</li>
+  <li><code><i>d</i><sub>f</sub> [µm]</code> - The film thickness of the stationary phase in micrometers.</li>
+  <li><code class="language-plaintext highlighter-rouge">Gas</code> - The type of the gas of the mobile phase. Available selections are <code class="language-plaintext highlighter-rouge">He</code> for helium, <code class="language-plaintext highlighter-rouge">H2</code> for hydrogen and <code class="language-plaintext highlighter-rouge">N2</code> for nitrogen.</li>
+</ul>
+
+<p>Separately, the stationary phase can be selected from <code class="language-plaintext highlighter-rouge">stationary phase</code>. The available selection of stationary phases is extracted from the solute database. Changing the database, changes this selection.</p>
+
+<h3 id="program-settings">Program settings</h3>
+<p>With the program settings the temperature program, the flow respectively the inlet pressure, and the outlet pressure are defined.</p>
+
+<p><img src="/assets/p3/program_settings.png" alt="Program settings" /></p>
+
+<p>The temperature program is defined first by selecting, how many different heating ramps are used. Based on this selection the table for defining the temperature program is created, with the first column the heating <code class="language-plaintext highlighter-rouge">ramp [°C/min]</code>, the second column the temperature plateau <code class="language-plaintext highlighter-rouge">T [°C]</code> and the third column the <code class="language-plaintext highlighter-rouge">hold [min]</code> time of the temperature plateau. In the simulation, the temperature programs continues at the final temperature value until the last substance is eluted.</p>
+
+<p>For the flow program the value of the <code class="language-plaintext highlighter-rouge">flow [mL/min]</code> through the column is defined, if the <code class="language-plaintext highlighter-rouge">control mode</code> option is set to <code class="language-plaintext highlighter-rouge">Flow</code>. If the <code class="language-plaintext highlighter-rouge">control mode</code> option is set to <code class="language-plaintext highlighter-rouge">Pressure</code>, than the flow program is defined by the <code class="language-plaintext highlighter-rouge">inlet pressure [kPa(g)]</code> (gauge pressure). The value of flow respectively inlet pressure is constant throughout the whole program. The <code class="language-plaintext highlighter-rouge">outlet pressure</code> can be selected between <code class="language-plaintext highlighter-rouge">vacuum</code> (0 kPa) and <code class="language-plaintext highlighter-rouge">atmosphere</code> (101.3 kPa).</p>
+
+<p>The temperature, pressure and flow program are plotted as interactive graphs. With the mouse courser the values of the graphs can be shown. The plot can be saved as a .png-file by clicking the camera symbol. It is also possible to zoom into the graph by drawing a rectangle while holding the left mouse button around the area you want to zoom in.</p>
+
+<p><img src="/assets/p3/program_plot.png" alt="Program plot" /></p>
+
+<p>Attention must be given to some links of settings. Changing, for example, the <code class="language-plaintext highlighter-rouge">number of ramps</code> changes the temperature program settings and applies the default values.</p>
+
+<h3 id="substance-settings">Substance settings</h3>
+<p>The final settings section is the selection of the substances which will be used for the simulation of GC. This selection is divided in two steps. With the first step, the category of the substances can be selected. The options for the available categories is extracted from the loaded solute database (from the three columns <code class="language-plaintext highlighter-rouge">Cat_1</code>, <code class="language-plaintext highlighter-rouge">Cat_2</code> and <code class="language-plaintext highlighter-rouge">Cat_3</code>). In the second step, the the substances can be selected from the list of available substances defined by the selected category and the selected stationary phase.</p>
+
+<p><img src="/assets/p3/substance_settings.png" alt="Substance settings" /></p>
+
+<p>In the shown example PCBs are selected. The number in front of the name is the ID number of the substances in the loaded database. It was introduced to differentiate between multiple entries for the same substance, but with different retention parameters. This is here the case for the substances <code class="language-plaintext highlighter-rouge">PCB 28</code>, <code class="language-plaintext highlighter-rouge">PCB 52</code>, <code class="language-plaintext highlighter-rouge">PCB 101</code> and <code class="language-plaintext highlighter-rouge">PCB 138</code>.</p>
+
+<h2 id="simulation">Simulation</h2>
+<p>Finally we reached the cell in the notebook, where the simulation itself is calculated. In the screenshot below, I made the code visible. It is just this one line. Here the time needed for the simulation of the 13 selected PCB can be seen, which is 1 s. Every time one of the <code class="language-plaintext highlighter-rouge">Confirm</code>-buttons in the settings is clicked, the simulation is run.</p>
+
+<p><img src="/assets/p3/simulation.png" alt="Simulation" /></p>
+
+<p>All the settings are collected in the structure <code class="language-plaintext highlighter-rouge">GasChromatographySimulator.Parameters</code> labeled here <code class="language-plaintext highlighter-rouge">par</code>. This part is hidden at the bottom of the notebook. 
+<img src="/assets/p3/parameters.png" alt="Parameters" /></p>
+
+<h3 id="peaklist">Peaklist</h3>
+<p>The main result of the simulation is the peaklist. In this table the resulting retention times and peak widths and derived quantities are listed here. The substances are sorted by increasing retention times.</p>
+
+<p><img src="/assets/p3/peaklist.png" alt="Peaklist" /></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">No</code> - The ID number from the loaded retention database</li>
+  <li><code class="language-plaintext highlighter-rouge">Name</code> - The name of the substance.</li>
+  <li><code class="language-plaintext highlighter-rouge">CAS</code> - The CAS number of the substance.</li>
+  <li><code class="language-plaintext highlighter-rouge">tR</code> - The retention time in seconds.</li>
+  <li><code>&tau;R</code> - The standard deviation of the gaussian peak in seconds. The full width at half maximum (FWHM) can be calculated as 2√<span style="text-decoration:overline">2 ln 2</span> τR.</li>
+  <li><code class="language-plaintext highlighter-rouge">TR</code> - The temperature of the GC oven at the retention time in °C.</li>
+  <li><code>&sigma;R</code> - The spatial band width at the retention time in meters. Because of the vacuum outlet it is infinite here.</li>
+  <li><code class="language-plaintext highlighter-rouge">uR</code> - The linear velocity of the substance at the retention time in meters per seconds. Because of the vacuum outlet it is infinite here.</li>
+  <li><code class="language-plaintext highlighter-rouge">kR</code> - The retention factor at the retention time.</li>
+  <li><code class="language-plaintext highlighter-rouge">Res</code> - The resolution between neighboring peaks.</li>
+  <li><code>&Delta;s</code> - The separation between neighboring peaks. It is approximately 4 times the resolution.</li>
+  <li><code class="language-plaintext highlighter-rouge">Annotations</code> - Collected information, like source and categories of the substances
+The columns <code class="language-plaintext highlighter-rouge">Res</code>, <code>&Delta;s</code> and <code class="language-plaintext highlighter-rouge">Annotations</code> are not visible in the screenshot. You have to scroll to the right in the table of the notebook.
+    <h3 id="chromatogram">Chromatogram</h3>
+    <p>Based on the results shown in the peaklist the chromatogram is calculated using gaussian peaks with an area of 1. Therefore the peak hight correlates with the peak width for resolved peaks.</p>
+  </li>
+</ul>
+
+<p><img src="/assets/p3/chromatogram_.gif" alt="Chromatogram" /></p>
+
+<p>The peaks are numbered by their position in the peak list. As the plot of the program is interactively, the chromatogram is as well. You can zoom in and save is as a .png-file.</p>
+<h3 id="local-values">Local values</h3>
+<p>With the last plots local values of time, peak width, temperature, band width and solute velocity can be plotted. This can be used to observe the development of the separation during the migration of the substances through the column.
+<img src="/assets/p3/local_values_with_pause.gif" alt="Local values" /></p>
+<h3 id="export-results">Export results</h3>
+<p>Finally, we can export the results of the simulation in the form of the peaklist including the settings of the simulation.
+<img src="/assets/p3/export_results.png" alt="Export results" />
+With <code class="language-plaintext highlighter-rouge">Filename</code> the name of the exported file can be changed. By clicking the <code class="language-plaintext highlighter-rouge">Download</code> button the result is downloaded as the named file into the standard download folder.
+<img src="/assets/p3/export_file.png" alt="Export file" /></p>
+
+<h2 id="additional-notes">Additional notes</h2>
+
+<p>As shown in the <a href="/tutorial/gaschromatographytoolbox/notebooks/2024/03/12/tutorial_notebooks.html">previous tutorial</a> you can move the cells to other positions in the notebook. This comes in handy, if you want to change some parameters and observe the change in the chromatogram directly as shown here for the variation of the column diameter:</p>
+
+<p><img src="/assets/p3/dvar.gif" alt="Diameter variation" /></p>
+
+<p>This concludes this tutorial. In the next tutorial I will show, how the notebook <a href="https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/estimate_retention_parameters.jl"><code class="language-plaintext highlighter-rouge">estimate_retention_parameters.jl</code></a> can be used to calculate retention parameters from a small number of GC measurements with different programs.</p>
+
+<p>Please leave a comment if you have more questions about the simulator.</p>
+
+<script src="https://giscus.app/client.js" data-repo="JanLeppert/janleppert.github.io" data-repo-id="R_kgDOKa8EYQ" data-category="Announcements" data-category-id="DIC_kwDOKa8EYc4Cd8Fa" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async="">
+</script>]]></content><author><name>Jan Leppert</name><email>info@janleppert.de</email></author><category term="Tutorial" /><category term="GasChromatographyToolbox" /><category term="Notebooks" /><summary type="html"><![CDATA[In this post I want to give a tutorial on how to use the notebook simulation_conventional_GC.jl to run simulations for a simple GC system. Installing the needed software and how to start a notebook was shown in the previous tutorial. The notebook can be found under this URL.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assest/GasChromatographySimulator_logo.png" /><media:content medium="image" url="http://localhost:4000/assest/GasChromatographySimulator_logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Tutorial for usage of Pluto notebooks</title><link href="http://localhost:4000/tutorial/gaschromatographytoolbox/notebooks/2024/03/12/tutorial_notebooks.html" rel="alternate" type="text/html" title="Tutorial for usage of Pluto notebooks" /><published>2024-03-12T00:00:00+01:00</published><updated>2024-03-12T00:00:00+01:00</updated><id>http://localhost:4000/tutorial/gaschromatographytoolbox/notebooks/2024/03/12/tutorial_notebooks</id><content type="html" xml:base="http://localhost:4000/tutorial/gaschromatographytoolbox/notebooks/2024/03/12/tutorial_notebooks.html"><![CDATA[<p><img src="/assets/GasChromatographyToolbox_logo_w.png" alt="GasChromatographyToolbox.jl" /></p>
+
+<p>In this post I want to give a tutorial on how to run Pluto notebooks to run simulations of gas chromatographic simulations. But first I want to introduce a new Github repository named <a href="https://github.com/GasChromatographyToolbox/GasChromatographyToolbox">GasChromatographyToolbox</a> which will function as the central entry point for the simulation of gas chromatographic separations. In this repository a selection of interactive notebooks is collected. For now only a limited number of notebooks are available; further notebooks will be added in the future:</p>
+
+<ul>
+  <li><a href="https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl"><code class="language-plaintext highlighter-rouge">simulation_conventional_GC.jl</code></a> … Simulation of GC separation in one capillary column using <a href="https://github.com/GasChromatographyToolbox/GasChromatographySimulator.jl">GasChromatographySimulator.jl</a>. Retention data from <a href="https://github.com/GasChromatographyToolbox/RetentionData">RetentionData</a> is used.</li>
+  <li><a href="https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/simulation_thermal_gradient_GC.jl"><code class="language-plaintext highlighter-rouge">simulation_thermal_gradient_GC.jl</code></a> … Simulation of GC separation in one capillary column with a thermal gradient along the column using <a href="https://github.com/GasChromatographyToolbox/GasChromatographySimulator.jl">GasChromatographySimulator.jl</a>. Retention data from <a href="https://github.com/GasChromatographyToolbox/RetentionData">RetentionData</a> is used.</li>
+  <li><a href="https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/estimate_retention_parameters.jl"><code class="language-plaintext highlighter-rouge">estimate_retention_parameters.jl</code></a> … Estimation of retention parameters from measured chromatograms.</li>
+</ul>
+
+<h2 id="installing-julia">Installing Julia</h2>
+
+<p>The latest stable version of the Julia Programming Language can be downloaded from:
+<a href="https://julialang.org/downloads/#current_stable_release">https://julialang.org/downloads/#current_stable_release</a> 
+Instructions for different operating systems can be found at:
+<a href="https://julialang.org/downloads/platform/">https://julialang.org/downloads/platform/</a></p>
+
+<h2 id="using-julia">Using Julia</h2>
+
+<p>By double-clicking the Julia executable or running <code class="language-plaintext highlighter-rouge">julia</code> from the command line an interactive session Julia session is started in the terminal:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ julia
+
+               _
+   _       _ _(_)_     |  Documentation: https://docs.julialang.org
+  (_)     | (_) (_)    |
+   _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
+  | | | | | | |/ _` |  |
+  | | |_| | | | (_| |  |  Version 1.10.2 (2024-03-01)
+ _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
+|__/                   |
+
+julia&gt;
+</code></pre></div></div>
+
+<p>Here code can be typed in and by pressing ‘Enter’ it is executed and the result is returned in the next line.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julia&gt; 1 + 2
+3
+</code></pre></div></div>
+
+<p>The interactive session can be exited by typing <code class="language-plaintext highlighter-rouge">exit()</code> and pressing ‘Enter’.</p>
+
+<p>For more information about the Julia programming language in general see <a href="https://docs.julialang.org/en/v1/">here</a>.</p>
+
+<h2 id="installing-pluto">Installing Pluto</h2>
+
+<p>To use the available notebooks for the GasChromatographyToolbox a package has to be first added to Julia. This is done by using the package manager Pkg. Julia must be started as shown before. By entering  <code class="language-plaintext highlighter-rouge">]</code> the Pkg environment is activated, indicated by:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julia&gt; ]
+(@v1.10) pkg&gt; 
+</code></pre></div></div>
+<p>Here we can add the <a href="https://github.com/fonsp/Pluto.jl">Pluto.jl</a> package by</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(@v1.10) pkg&gt; add Pluto
+</code></pre></div></div>
+<p>The latest version of the Pluto package will be downloaded and registered with your Julia environment.</p>
+
+<p>The Pkg environment can be exited by pressing Backspace in an empty line.</p>
+
+<p>For more information about the Pkg environment see <a href="https://pkgdocs.julialang.org/v1/">here</a>.</p>
+
+<h2 id="start-a-notebook">Start a notebook</h2>
+
+<p>To start a notebook from the collection of GasChromatographyToolbox start Julia yy double-clicking the Julia executable or running <code class="language-plaintext highlighter-rouge">julia</code> from the command line. Then type in:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julia&gt; import Pluto; Pluto.run()
+</code></pre></div></div>
+<p>This will load in the Pluto package and start a Pluto notebook session. Your browser will automatically be opened:</p>
+
+<p><img src="/assets/p2/start.png" alt="Start screen" /></p>
+
+<p>In the cell titled “Open a Notebook” you can enter the path (if you have downloaded it) or the URL to the notebook you want to open. For example this <a href="https://github.com/GasChromatographyToolbox/GasChromatographyToolbox/blob/main/notebooks/simulation_conventional_GC.jl">URL</a>, if pasted into this cell, opens the notebook for the simulation of a conventional GC in the ‘Safe preview’ mode. Later, all ready used notebooks will be available through the “My work” list.</p>
+
+<p><img src="/assets/p2/safe_preview.png" alt="Safe preview" /></p>
+
+<p>To finally run the notebook as an interactive session you have to click ‘Run notebook code’ in the upper right corner.</p>
+
+<p><img src="/assets/p2/loaded.png" alt="Loaded notebook" /></p>
+
+<p>On the right side is the ‘Table of contents’, from where you can jump to the different sections, by clicking on the names of the sections.</p>
+
+<p>With the button (rectangle with arrow) on the top right it is also possible to export the notebook as static html- or pdf-file or make a record to capture all changes to the notebook:</p>
+
+<p><img src="/assets/p2/export.png" alt="Export" /></p>
+
+<p>The Julia code, which is executed in the different cells can be viewed by clicking on crossed out eye symbol on the left to the cell:</p>
+
+<p><img src="/assets/p2/hidden_code.gif" alt="Hidden code" /></p>
+
+<p>The cells can be moved by using the shortcut <code class="language-plaintext highlighter-rouge">Alt</code> + <code class="language-plaintext highlighter-rouge">Up/Down</code> (or <code class="language-plaintext highlighter-rouge">Option</code> + <code class="language-plaintext highlighter-rouge">Up/Down</code> on Mac) or by drag and drop. This can be helpful to observe the changes made in one cell on the results shown in another cell.</p>
+
+<p><img src="/assets/p2/drag.gif" alt="Drag and drop" /></p>
+
+<p>Additional information about Pluto notebooks can found <a href="https://plutojl.org/">here</a>.</p>
+
+<p>In the next tutorial the notebook <code class="language-plaintext highlighter-rouge">simulation_conventional_GC.jl</code> will be shown and explained step by step.</p>]]></content><author><name>Jan Leppert</name><email>info@janleppert.de</email></author><category term="Tutorial" /><category term="GasChromatographyToolbox" /><category term="Notebooks" /><summary type="html"><![CDATA[]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assest/GasChromatographyToolbox_logo_w_1200.png" /><media:content medium="image" url="http://localhost:4000/assest/GasChromatographyToolbox_logo_w_1200.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Toolbox for the simulation of gas chromatography</title><link href="http://localhost:4000/gaschromatographytoolbox/2024/02/29/toolbox.html" rel="alternate" type="text/html" title="Toolbox for the simulation of gas chromatography" /><published>2024-02-29T00:00:00+01:00</published><updated>2024-02-29T00:00:00+01:00</updated><id>http://localhost:4000/gaschromatographytoolbox/2024/02/29/toolbox</id><content type="html" xml:base="http://localhost:4000/gaschromatographytoolbox/2024/02/29/toolbox.html"><![CDATA[<p>In this first post I want to present the different tools to simulate the gas chromatographic separation of a mixture of substances. I developed these tools with the help of <a href="https://www.linkedin.com/in/tillman-brehmer-144386264/">Tillman Brehmer</a> over the last years using the <a href="https://julialang.org/">Julia Programming Language</a>.</p>
+
+<h2 id="aim">Aim</h2>
+
+<p>The aim is to use the simulation of gas chromatography (GC) to optimize the separation of complex mixtures with only a small number of initial measurements. Based on these measurements the retention parameters of the substances are estimated. These retention parameters are than used to simulate new GC programs (temperature and pressures) to find an optimal separation. A second aspect is to investigate new techniques in GC, like multidimensional GC and thermal gradients along the GC column.</p>
+
+<h2 id="background">Background</h2>
+
+<p>I started to develop the simulation as part of a project in the workgroup of <a href="https://www.linkedin.com/in/peter-boeker-723aba215/">Peter Boeker</a> at the <a href="https://www.lebensmittelchemie.uni-bonn.de/">chair of food chemistry</a> (Prof. Matthias Wüst), University of Bonn. In this project we developed a <a href="https://doi.org/10.1021/acs.analchem.5b02227">hyper-fast GC</a> based on the resistive heating of a stainless steel capillary with the GC column inside. By applying a controlled flow of air blowing on the stainless steel capillary it is possible to create a thermal gradient along the capillary an with it for the GC column. This hyper-fast GC, also known as Flow Field Thermal Gradient GC (FF-TG-GC) is now produced by <a href="https://www.hyperchrom.com/">Hyperchrom</a>.</p>
+
+<p>To understand the usage and limitations of the thermal gradient, I developed the GC simulation. Multiple approaches existed before (e.g. <a href="https://ez.restek.com/proezgc/en">EZGC</a>) but they did not allow for a variation of the temperature along the column. Therefore, I implemented the possibility to incorporate different types of gradients (temperature, film thickness and internal diameter of the GC column), which all produce an additional gradient of the migration velocity of the substances. The idea behind this additional velocity gradient is to counteract the natural occurring velocity gradient and to improve the peak shape in the final chromatogram. Using the simulation, we could show the <a href="https://doi.org/10.1016/j.chroma.2021.461943">limitations of this technique</a>. An improvement of the separation by around 10% is possible. We also could show, that using a thermal gradient can significantly lower the temperature the substances experiences during separation, which can be beneficial for thermo-labile compounds, like <a href="https://doi.org/10.1021/acs.analchem.8b00900">explosives</a>.</p>
+
+<h2 id="open-source">Open-source</h2>
+
+<p>From the beginning on, the GC simulation should be open-source and be available for all interested people. I started to develop the simulation with <a href="https://www.scilab.org/">Scilab</a>, an open-source clone of MATLAB, because I had experience in using MATLAB. But early in the process I experienced multiple limitations, mostly due to a limited number of available functions and packages and a lack of speed. I looked for alternatives, with Python being an obvious one. In this process I came to the <a href="https://julialang.org/">Julia Programming Language</a>, a high-level, fast general purpose language with a growing community, especially for scientific programming, including machine learning. Also, the filename extension <code class="language-plaintext highlighter-rouge">.jl</code> matches my initials, so it was inescapable to use Julia.</p>
+
+<p>In the following the different parts of the toolbox are briefly introduced. In later entries, they will be presented in more detail, including tutorials for their usage.</p>
+
+<p><img src="/assets/GasChromatographySimulator_logo.png" alt="GasChromatographySimulator_logo" /></p>
+
+<p>The package <a href="https://github.com/JanLeppert/GasChromatographySimulator.jl">GasChromatographySimulator.jl</a> is the <a href="https://doi.org/10.21105/joss.04565">core</a> of the toolbox for GC simulation. It is used to simulate the separation of multiple substances on one GC column with a defined temperature and pressure program. In addition, the temperature, film thickness and inner diameter along the column can be varied with arbitrary functions. The substances are defined by their retention data in the form of the three parameter <a href="10.1016/j.chroma.2017.02.047">Distribution-centric retention model</a>, which is an equivalent model to the three thermodynamic parameters for the van’t Hoff model.</p>
+
+<p><img src="/assets/MeasSim_PAH.png" alt="Measured and simulated PAH separation" />
+<em>Example simulated separation of the 16 EPA PAH (red) in comparison to a measurement (blue).</em></p>
+
+<p>For an easy usage of the simulation of simple GC separations several interactive notebooks are available, which will be presented in detail in a later tutorial.</p>
+
+<p>This package is the basis for the two following packages.</p>
+
+<p><img src="/assets/RetentionParameterEstimator_logo.png" alt="RetentionParameterEstimator_logo" /></p>
+
+<p>The package <a href="https://github.com/JanLeppert/RetentionParameterEstimator.jl">RetentionParameterEstimator.jl</a> is used to <a href="https://doi.org/10.1016/j.chroma.2023.464008">estimate the retention parameters</a> in the form of the three parameter Distribution-centric retention model from a number of measured GC runs with different programs. It uses the GC simulation of the GasChromatographySimulator.jl package to estimate the retention parameters, which best fit the measured chromatograms. A Newton method with trust regions is used to find the optimized parameters. The goodness of fit of the estimated parameters can be tested by applying the found parameters to the simulation of additional GC programs and compare the simulation with measurements.</p>
+
+<p><img src="/assets/RetentionParameterEstimator_example.png" alt="RetentionParameterEstimator_example" />
+<em>A) Example of the estimation of retention data of 12 substances from five different temperatures program. B) Resulting lnk-functions. C) Comparison of measured and simulated chromatogram using the estimated retention data.</em></p>
+
+<p>Using this method to estimate the retention parameters is faster than the common method of using multiple isothermal measurements. A high number of a wide range of substances can be measured together in three to six different GC programs, while a multitude of isothermal measurements would be needed to estimate the retention parameters in the traditional way.</p>
+
+<p><img src="/assets/GasChromatographySystems_logo.png" alt="GasChromatographySystems_logo" /></p>
+
+<p>The package <a href="https://github.com/JanLeppert/GasChromatographySystems.jl">GasChromatographySystems.jl</a> is used to simulate the GC separation in complex GC systems, where more than one GC column is used. The simplest example for such a system is a GC where the main column is combined with restriction capillaries and different heated zones, e.g. transfer lines, are used. Multidimensional GC systems are more complex using multiple GC columns with different stationary phases and involving modulators.</p>
+
+<p><img src="/assets/GasChromatographySystems_example.png" alt="GasChromatographySystems_example" />
+<em>Example of a GC system with two parallel GC columns connected to the same injector and detector.</em></p>
+
+<p>To account for these different systems, a modular approach is used, where a network of different modules is used to represent the GC system, which is represented as a <a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">Graph</a>. One of the main features of this package, besides the simulation of the separation is a flow calculator of complex GC systems. Based on the defined dimensions for the capillaries, the temperatures and the used pressures for inlet and outlets of the system, the flow and the pressures at all positions of the system are calculated. This information is needed for the modular simulation of the separation. Beginning at the inlet of the system, the GC separation is simulated for every segment using the GasChromatographySimulator.jl package. The results from one segment (retention times and peak widths) are used as initial values for the following segment. The ratio of flows at split points is used for the ratios of substance amounts trough the different possible paths available.</p>
+
+<p>This package is still heavily in development and multiple scientific publications are in preparation. The aim for the GasChromatographySystems.jl package is to simulate every imaginable GC system, including GC×GC with thermal and flow modulation or GC×GC×GC.</p>
+
+<p><img src="/assets/RetentionData_logo.png" alt="RetentionData_logo" /></p>
+
+<p>A fourth part of the toolbox is the database <a href="https://github.com/JanLeppert/RetentionData">RetentionData</a>. Unless the three previous tools, this is not a Julia package, but a <a href="https://doi.org/10.1021/acsomega.3c01348">compilation</a> of isothermal measured retention data found in the literature and measured in our work group. This data consists of three parameters of the equivalent models of the Distribution-centric model, thermodynamic model and the <em>ABC</em>-model. In addition to the data, this repository also contains some Julia notebooks, which are used to convert the parameters, calculate the parameters from ln <em>k</em>(<em>T</em>)-data, resp. retention times and compile the database including some filters in regard to the range of values of the parameters. Everyone is invited to submit additional retention data to expand this database.</p>]]></content><author><name>Jan Leppert</name><email>info@janleppert.de</email></author><category term="GasChromatographyToolbox" /><summary type="html"><![CDATA[In this first post I want to present the different tools to simulate the gas chromatographic separation of a mixture of substances. I developed these tools with the help of Tillman Brehmer over the last years using the Julia Programming Language.]]></summary></entry></feed>

@@ -5,15 +5,26 @@
 layout: home
 ---
 
-Hi, I am Jan Leppert, welcome to my personal webpage. 
+# _Consultant for Scientific Services and Programming_
 
-I am a physicist working in analytical chemistry and work as a temporal primary investigator at the [University of Bonn](https://www.lwf.uni-bonn.de/institute/iel/institut/lmc/Fast-GC). In my **current work** I use [simulations of complex gas chromatographic (GC) separation system](https://github.com/JanLeppert/GasChromatographyToolbox), e.g. GC×GC, for method development and optimization. Part of this work is the description of the interaction of compounds with different stationary phases used in GC with different models, like thermodynamic models and linear solvent energy relationship (LSER) models.
+## Services Offered
 
-In the future, I want to use these simulations of complex GC-systems to _automatically_ optimize separations, using methods of artificial intelligence and machine learning, to improve method development, especially for multidimensional GC separation.  
+* **Optimization of Gas Chromatographic Methods:** Enhance analytical precision and efficiency.  
+* **Design and Implementation of Complex Gas Chromatographic Systems:** Expertise in multi-detector setups and multidimensional systems (e.g., GC×GC).
+* **Custom Programming for Data Analysis and Scientific Tools:** Tailored software solutions for complex challenges.
+* **Frontend and Web Development:** Development of user-friendly interfaces and web-based applications.
 
-I did my doctorate in analytical chemistry at the University of Bonn. In my thesis I developed a near real time method for the measurement of airborne chemical warfare agents using thermal desorption (TD) coupled with GC and mass spectral (MS) detection.
+## Technical Expertise
+* **Programming Languages:** Julia, MATLAB, Python, R, LabVIEW, Origin C, HTML, CSS, JavaScript.
+* **Data Analysis:** Advanced chemometric techniques, including multivariate regression, principal component analysis, cluster analysis and Fourier transform analysis.
+* **Modeling and Simulation Development:** Creation of robust and precise simulation tools.
+* **Numerical Optimization:** Solving complex computational problems with innovative methods.  
 
-In following projects I focussed on olfactory detection. I evaluated the loss of odorants in sample bags made of Tedlar and Nalophan and TD tubes using GC-MS. A GC-MS system with an additional olfactory outlet was used to investigate off-flavors of boar taint in meat.
+## Portfolio:
+**[GasChromatographyToolbox](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox) - Comprehensive tools for GC simulation and optimization:**
 
-In a continuation project I worked on the detection of explosives using GC-MS and toke part in the development of a novel [hyper-fast GC](https://www.hyperchrom.com/), which also used a new technique of a spatial thermal gradient along the GC column. As part of this project, I started to develop the [simulation of GC](https://github.com/JanLeppert/GasChromatographySimulator.jl).
+1. [GasChromatographySimulator.jl](https://github.com/GasChromatographyToolbox/GasChromatographySimulator.jl): Simulates gas chromatographic separations, including innovative techniques like spatial temperature gradients along the column.
+2. [GasChromatographySystems.jl](https://github.com/GasChromatographyToolbox/GasChromatographySystems.jl): Models complex GC systems with multiple columns (e.g., GC×GC). Features a flow calculator leveraging graph theory for automatic setup and solution of flow equations in capillary networks.
+3. [RetentionParameterEstimator.jl](https://github.com/GasChromatographyToolbox/RetentionParameterEstimator.jl): Utilizes GC measurements to estimate retention parameters through optimization methods and the GasChromatographySimulator.jl. 
 
+**Contact me** to explore how my expertise can support your scientific and technical challenges.

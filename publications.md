@@ -4,6 +4,10 @@ title: Publications
 permalink: /publications/
 ---
 
+* **Leppert, J.**, Brehmer, T., Boeker, P., Wüst, M. (2024): „Generalized flow calculation of the gas flow in a network of capillaries used in gas chromatography“, Journal of Separation Science, 47: 2400419. [10.1002/jssc.202400419](https://doi.org/10.1002/jssc.202400419).
+
+* Brehmer, T., Boeker, P., Wüst, M., **Leppert, J.** (2024): „Relation between characteristic temperature and elution temperature in temperature programmed gas chromatography – Part II: Influence of column properties“, Journal of Chromatography A, 1728: 464997. [10.1016/j.chroma.2024.464997](https://doi.org/10.1016/j.chroma.2024.464997).
+
 * Brehmer, T., Duong, B., Boeker, P., Wüst, M., **Leppert, J.** (2024): „Simulation of gas chromatographic separations and estimation of distribution-centric retention parameters using linear solvation energy relationships“, Journal of Chromatography A, 1717: 464665. [10.1016/j.chroma.2024.464665](https://doi.org/10.1016/j.chroma.2024.464665).
 
 * Brehmer, T., Boeker, P., Wüst, M., **Leppert, J.** (2023): 
