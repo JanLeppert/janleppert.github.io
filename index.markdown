@@ -4,8 +4,9 @@
 
 layout: home
 ---
+# Jan Leppert 
 
-## Consultantfor Scientific Services and Programming
+## Consultant for Scientific Services and Programming
 
 ### Services Offered
 
