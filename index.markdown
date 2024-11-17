@@ -5,8 +5,7 @@
 layout: home
 ---
 
-# Consultant 
-## for Scientific Services and Programming
+## Consultantfor Scientific Services and Programming
 
 ### Services Offered
 
