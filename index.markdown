@@ -5,22 +5,23 @@
 layout: home
 ---
 
-# _Consultant for Scientific Services and Programming_
+# Consultant 
+## for Scientific Services and Programming
 
-## Services Offered
+### Services Offered
 
 * **Optimization of Gas Chromatographic Methods:** Enhance analytical precision and efficiency.  
 * **Design and Implementation of Complex Gas Chromatographic Systems:** Expertise in multi-detector setups and multidimensional systems (e.g., GC×GC).
 * **Custom Programming for Data Analysis and Scientific Tools:** Tailored software solutions for complex challenges.
 * **Frontend and Web Development:** Development of user-friendly interfaces and web-based applications.
 
-## Technical Expertise
+### Technical Expertise
 * **Programming Languages:** Julia, MATLAB, Python, R, LabVIEW, Origin C, HTML, CSS, JavaScript.
 * **Data Analysis:** Advanced chemometric techniques, including multivariate regression, principal component analysis, cluster analysis and Fourier transform analysis.
 * **Modeling and Simulation Development:** Creation of robust and precise simulation tools.
 * **Numerical Optimization:** Solving complex computational problems with innovative methods.  
 
-## Portfolio:
+### Portfolio:
 **[GasChromatographyToolbox](https://github.com/GasChromatographyToolbox/GasChromatographyToolbox) - Comprehensive tools for GC simulation and optimization:**
 
 1. [GasChromatographySimulator.jl](https://github.com/GasChromatographyToolbox/GasChromatographySimulator.jl): Simulates gas chromatographic separations, including innovative techniques like spatial temperature gradients along the column.
