@@ -21,18 +21,20 @@
 title: Jan Leppert
 author:
   name: Jan Leppert
-  email: contact@janleppert.com
+  email: info@janleppert.de
+
+email: info@janleppert.de
 
 description: >- # this means to ignore newlines until "baseurl:"
   All about me and my research.
 
 baseurl: "" # the subpath of your site, e.g. /blog
 domain: janleppert.github.io
-url: https://janleppert.github.io #"" # "http://www.janleppert.com" # the base hostname & protocol for your site, e.g. http://example.com
+url: https://www.janleppert.de #"" # "http://www.janleppert.com" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 github_username:  JanLeppert
 orcid_username: 0000-0001-8857-8103
-linkedin_username: jan-leppert-5b04a4273
+linkedin_username: jan-leppert
 
 # Build settings
 theme: minima
@@ -43,7 +45,7 @@ plugins:
 minima:
   social_links:
     - { platform: github,         user_url: "https://github.com/JanLeppert" }
-    - { platform: linkedin,       user_url: "https://www.linkedin.com/in/jan-leppert-5b04a4273" }
+    - { platform: linkedin,       user_url: "https://www.linkedin.com/in/jan-leppert" }
     - { platform: orcid,       user_url: "https://orcid.org/0000-0001-8857-8103" }
   # Minima date format.
   # Refer to https://shopify.github.io/liquid/filters/date/ if you want to customize this.
