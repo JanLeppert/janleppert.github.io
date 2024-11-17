@@ -4,9 +4,8 @@
 
 layout: home
 list_title: Blog
+title: Welcome to Jan Leppert Scientific Services
 ---
-
-# Welcome to Jan Leppert Scientific Services
 
 ![JanLeppert_photo](/assets/IMG_2394.jpeg)
 
