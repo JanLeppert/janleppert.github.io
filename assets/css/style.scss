@@ -5,3 +5,23 @@
 @import
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.align-left {
+  float: left;
+  margin-bottom: 1em;
+}
+
+@media screen and (max-width: 600px) {
+  .align-left {
+    float: none;
+    display: block;
+    margin: 1em auto;
+    width: 100% !important;
+  }
+}
