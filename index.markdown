@@ -9,4 +9,4 @@ title: Welcome to Jan Leppert Scientific Services
 
 ![JanLeppert_photo](/assets/IMG_2394.jpeg)
 
-I am a physicist and analytical chemist driven by a **passion for the Julia programming language** and its unmatched potential for solving complex problems. My expertise lies in simulating intricate physical and chemical systems, enabling innovative solutions and optimizing real-world processes.
+I am a physicist and analytical chemist driven by a **passion for the Julia programming language** and its unmatched potential for solving complex problems. My expertise lies in simulating intricate physical and chemical systems, enabling innovative solutions and optimizing real-world processes. Check out my latest project [GasChromatographyToolbox.org](https://gaschromatographytoolbox.org), an interactive web application for gas chromatography simulation.
